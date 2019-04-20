@@ -1,0 +1,125 @@
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+		#title-box, #display-box {
+			/* display: inline-block; */
+			text-align: top;
+			font-family: Montserrat, Helvetica, sans-serif;
+			text-align: center;
+		}
+		#display-box {
+			font-size: large;
+		}
+		#title-box {
+			font-size: x-large;
+		}
+		svg {
+			align-content: center;
+			margin: 1%;
+		}
+
+		svg.banner { width: 100%; height: 100%; }
+		.image {
+			overflow-y: scroll;
+			overflow-x: scroll;
+		}
+		.bar {
+			fill: red;
+			cursor: pointer;
+			font-family: Helvetica, sans-serif;
+		}
+		.bar text {
+			color: black;
+		}
+		.bar:hover, .bar:focus {
+			fill: black;
+		}
+		.bar:hover text, .bar:focus text {
+			fill: blue;
+			display: block;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<div id="title-box" class="text">{{ title }}</div>
+	<br>
+
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<svg xmlns:xlink="http://www.w3.org/1999/xlink" class="image" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" role="img" height="90%" width="90%" viewBox="0 0 {{ width }} {{ height }}" transform="scale(1, -1) translate(0, {{ translate_y }})">	
+
+					{{ temp_pos = x_pos }}
+					{{ iter = 0 }}
+					{% for x in values %}
+						{{ y = values[x] }}
+						{{ h = 50 + int(y) }}
+						{{ type(x) == int }}
+						
+						<g class='bar'>
+							<rect class="one_rect" id="rect_{{ iter }}" width='{{ bar_width }}' height='{{ h }}' x='{{ temp_pos }}'></rect>
+							<!--<text x="{{ temp_pos }}" y="{{ h + 5 }}" dy=".35em">{{ y }}</text>-->
+							<title class='title'>{{ x_label }} = {{ x }} | {{ y_label }} = {{ y }}</title>
+						</g>
+
+						{{ iter = iter + 1 }}
+			
+						{{ temp_pos = temp_pos + bar_width + bar_gap }}
+					{% end %}
+				</svg>
+			</div>
+		</div>
+		
+
+		<hr>
+		<div class="row">
+			<div class="col">
+				<div id="display-box" class="text"> </div>
+			</div>
+		</div>
+		
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script type="text/javascript"> 
+		let svg = document.querySelector('svg'),
+            display = document.querySelector('#display-box'),
+			bar = document.querySelectorAll('.bar'),
+			rect = document.querySelectorAll('.one_rect'),
+			numElements = bar.length,
+			width = 100.0/(1.3 * numElements),
+			gap = width/3;
+
+		console.log(width);
+
+		for(let i = 0; i < rect.length; i++) {
+			rect[i].setAttribute('width', width + '' + '%');
+			let x_pos = width + (i * (width + gap) * screen.width / 70.0);
+			rect[i].setAttribute('x', x_pos);
+		}
+
+		for(let i = 0; i < bar.length; i++) {
+			bar[i].addEventListener('mouseover', function(evt) {
+				bar[i].style.fill = "#BF2200";
+				display.innerHTML = bar[i].querySelector('title').innerHTML;
+			}, false);
+
+			bar[i].addEventListener('mouseleave', function(evt) {
+				bar[i].style.fill = "red";
+				display.innerHTML = ' ';
+			}, false);
+		}
+
+        /* svg.addEventListener('mouseout', hidePoint, false); */
+	</script>
+</div>
+</body>
+</html>
